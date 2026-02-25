@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Component
@@ -72,12 +73,12 @@ public class ListenCommend extends ListenerAdapter {
 
             case "mute":
             case "뮤트":
-                handleMuteCommand(args);
+                handleMuteCommand(args,true);
                 break;
 
             case "unmute":
             case "언뮤트":
-                handleUnMuteCommand();
+                handleMuteCommand(args,false);
                 break;
         }
     }
@@ -149,6 +150,7 @@ public class ListenCommend extends ListenerAdapter {
             messageReceivedEvent.getMessage().reply("경고를 줄 대상을 멘션해주세요.").queue();
             return;
         }
+
         Member target = messageReceivedEvent.getMessage().getMentions().getMembers().get(0);
         String guildId = messageReceivedEvent.getGuild().getId();
         String userId = target.getId();
@@ -166,6 +168,7 @@ public class ListenCommend extends ListenerAdapter {
                 String title = target.getUser().getName() + "님의 누적 경고 횟수";
                 count = warnRepo.getWarn(guildId,userId);
                 comment = "경고 횟수 : "+ count + "\n뮤트 : " + warnRepo.getMute(guildId,userId);
+
                 Embed(title,Color.cyan,comment);
                 return;
         }
@@ -174,6 +177,7 @@ public class ListenCommend extends ListenerAdapter {
             case "add":
                 warnCount = warnRepo.addWarn(guildId, userId);
                 count = warnCount.getWarncnt();
+
                 if(reason.isEmpty()){
                     messageReceivedEvent.getChannel()
                             .sendMessage(target.getAsMention() + "님께 경고 " + count + "회가 누적되었습니다.")
@@ -203,12 +207,12 @@ public class ListenCommend extends ListenerAdapter {
                     System.out.println("해당 유저는 뮤트할 수 없습니다.");
                     Embed("",Color.cyan,target.getAsMention()+"(은)는 뮤트할 수 없습니다");
                     messageReceivedEvent.getMessage().reply(target.getAsMention()+"(은)는 뮤트할 수 없습니다").queue();
-
                 }
                 break;
 
             case "sub":
                 count = warnRepo.getWarn(guildId,userId);
+
                 if(count<=0){
                     messageReceivedEvent.getMessage().reply(target.getAsMention() +"(은)는 경고 수가 0입니다.").queue();
                 }
@@ -218,6 +222,7 @@ public class ListenCommend extends ListenerAdapter {
                     String title = "경고 횟수 감소";
                     comment = target.getAsMention()+"님의 경고횟수가 1 감소했습니다.\n"+
                             "현재 경고 회수 : " + count;
+
                     Embed(title,Color.cyan,comment);
                 }
                 break;
@@ -228,54 +233,55 @@ public class ListenCommend extends ListenerAdapter {
     }
 
     // 뮤트 (>mute @유저 )
-    private void handleMuteCommand(String[] args) {
+    private void handleMuteCommand(String[] args,boolean mute) {
         if (ChackOp()) return;
 
-        String muteTime = (args.length > 2 ? args[2] : "").toLowerCase();
+        //뮤트
+        if (mute){
+            String muteTime = (args.length > 2 ? args[2] : "").toLowerCase();
 
-        if(messageReceivedEvent.getMessage().getMentions().getMembers().isEmpty()) {
-            messageReceivedEvent.getMessage().reply("뮤트할 대상을 멘션해주세요.").queue();
-            return;
-        }
-        else if(muteTime.isEmpty()){
-            messageReceivedEvent.getMessage().reply("뮤트 시간을 입력해 주세요").queue();
-        }
+            if(messageReceivedEvent.getMessage().getMentions().getMembers().isEmpty()) {
+                messageReceivedEvent.getMessage().reply("뮤트할 대상을 멘션해주세요.").queue();
+                return;
+            }
+            else if(muteTime.isEmpty()){
+                messageReceivedEvent.getMessage().reply("뮤트 시간을 입력해 주세요").queue();
+            }
 
-        Member target = messageReceivedEvent.getMessage().getMentions().getMembers().get(0);
-        String guildId = messageReceivedEvent.getGuild().getId();
-        String userId = target.getId();
+            Member target = messageReceivedEvent.getMessage().getMentions().getMembers().get(0);
+            String guildId = messageReceivedEvent.getGuild().getId();
+            String userId = target.getId();
 
-        target.getGuild().timeoutFor(target, Duration.ofMinutes(10))
-                .queue(
-                        v -> {
-                            warnRepo.setMuted(guildId, userId, true);
-                            messageReceivedEvent.getChannel().sendMessage(target.getAsMention() + "님이 뮤트되었습니다.").queue();
-                        },
-                        e -> messageReceivedEvent.getChannel().sendMessage("뮤트에 실패했습니다: " + e.getMessage()).queue()
-                );
-    }
-
-    // 언뮤트 (>unmute @유저)
-    private void handleUnMuteCommand() {
-        if (ChackOp()) return;
-
-        if (messageReceivedEvent.getMessage().getMentions().getMembers().isEmpty()) {
-            messageReceivedEvent.getMessage().reply("언뮤트할 대상을 멘션해주세요.").queue();
-            return;
+            target.getGuild().timeoutFor(target, Duration.ofMinutes(10))
+                    .queue(
+                            v -> {
+                                warnRepo.setMuted(guildId, userId, true);
+                                messageReceivedEvent.getChannel().sendMessage(target.getAsMention() + "님이 뮤트되었습니다.").queue();
+                            },
+                            e -> messageReceivedEvent.getChannel().sendMessage("뮤트에 실패했습니다: " + e.getMessage()).queue()
+                    );
         }
 
-        Member target = messageReceivedEvent.getMessage().getMentions().getMembers().get(0);
-        String guildId = messageReceivedEvent.getGuild().getId();
-        String userId = target.getId();
+        //언뮤트
+        else{
+            if (messageReceivedEvent.getMessage().getMentions().getMembers().isEmpty()) {
+                messageReceivedEvent.getMessage().reply("언뮤트할 대상을 멘션해주세요.").queue();
+                return;
+            }
 
-        target.getGuild().removeTimeout(target)
-                .queue(
-                        v -> {
-                            warnRepo.setMuted(guildId, userId, false);
-                            messageReceivedEvent.getChannel().sendMessage(target.getAsMention() + "님의 뮤트가 해제되었습니다.").queue();
-                        },
-                        e -> messageReceivedEvent.getChannel().sendMessage("언뮤트에 실패했습니다: " + e.getMessage()).queue()
-                );
+            Member target = messageReceivedEvent.getMessage().getMentions().getMembers().get(0);
+            String guildId = messageReceivedEvent.getGuild().getId();
+            String userId = target.getId();
+
+            target.getGuild().removeTimeout(target)
+                    .queue(
+                            v -> {
+                                warnRepo.setMuted(guildId, userId, false);
+                                messageReceivedEvent.getChannel().sendMessage(target.getAsMention() + "님의 뮤트가 해제되었습니다.").queue();
+                            },
+                            e -> messageReceivedEvent.getChannel().sendMessage("언뮤트에 실패했습니다: " + e.getMessage()).queue()
+                    );
+        }
     }
 
     //help.md를 읽어오기
@@ -312,10 +318,6 @@ public class ListenCommend extends ListenerAdapter {
     }
 
     private void BanList(String banlist){
-//        String currentPerms = Objects.requireNonNull(messageReceivedEvent.getMember())
-//                .getPermissions().stream()
-//                .map(Permission::getName).sorted()
-//                .collect(Collectors.joining(", "));
         Embed("금지어 목록",Color.green,banlist);
     }
 
