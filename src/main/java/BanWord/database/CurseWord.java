@@ -23,10 +23,4 @@ public class CurseWord {
         this.banned = banned;
     }
 
-    // 편의 생성자 (새 금지어 등록용)
-    public CurseWord(String word) {
-        this.word = word;
-        this.banned = true;
-    }
-
 }
