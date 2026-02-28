@@ -295,8 +295,9 @@ public class ListenCommend extends ListenerAdapter {
         }
 
         try {
-            Cnt = Integer.parseInt(Count);
-            if (!(Cnt > 0 && Cnt < 100)){
+            Cnt = Integer.parseInt(String_Cnt);
+
+            if (Cnt <= 0 || Cnt >100) {
                 messageReceivedEvent.getMessage().reply("숫자는 1 ~ 100 사이로 입력해주세요.").queue();
             }
         }catch (NumberFormatException e){
