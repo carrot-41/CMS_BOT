@@ -1,4 +1,4 @@
-# Discord 관리 봇 (CMS BOT)
+# Discord 관리 봇 (SMB BOT)
 
 Spring Boot와 JDA를 기반으로 한 Discord 서버 관리 봇입니다. 금지어 필터링, 경고 시스템, 자동 뮤트 기능 등 서버 관리를 위한 필수 기능을 제공합니다.
 
