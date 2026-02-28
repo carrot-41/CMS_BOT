@@ -16,6 +16,7 @@ import java.util.EnumSet;
 
 @SpringBootApplication(scanBasePackages = {"my.bot", "response", "BanWord", "Warn"})
 @EnableMongoRepositories(basePackages = {"BanWord.database", "Warn"})
+
 public class BotMain {
     public static void main(String[] args) {
         final String ANSI_CYAN = "\u001B[36m";
@@ -35,11 +36,10 @@ public class BotMain {
         JDABuilder.createDefault(token).
                 enableIntents(intent).
                 setActivity(Activity.competing("도움말은 >help")).
-                setStatus(OnlineStatus.DO_NOT_DISTURB).
+                setStatus(OnlineStatus.ONLINE).
                 addEventListeners(commandListener, messageFilter,new Test()).
                 build();
 
         System.out.println(ANSI_CYAN+"bot booting successful"+ANSI_RESET);
     }
-
 }

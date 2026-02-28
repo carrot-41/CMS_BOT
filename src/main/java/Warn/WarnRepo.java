@@ -18,7 +18,7 @@ public class WarnRepo {
     }
 
     // 경고 회수
-    public WarnCount subWarn(String guildId, String userId){
+    public WarnCount subWarn(String guildId, String userId) {
         WarnCount warnCount = repo.findByGuildIdAndUserId(guildId,userId)
                 .orElse(new WarnCount(guildId,userId,0,false));
         warnCount.decreaseWarn();
