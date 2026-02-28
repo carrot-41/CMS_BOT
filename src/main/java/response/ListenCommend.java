@@ -174,6 +174,9 @@ public class ListenCommend extends ListenerAdapter {
 
                 embedUtil.Embed(title,Color.cyan,comment);
                 return;
+            case "reset":
+                warnRepo.resetWarn(guildId,userId);
+                return;
         }
 
         switch (Warning){
