@@ -20,7 +20,7 @@ public class EmbedUtil {
     }
     //임베드(일정 시간만 보여주고 메세지 삭제)
     public void Embed(String title, Color color, String message, boolean Delete){
-        Embed(title,color,message,true,5);
+        Embed(title,color,message, Delete,5);
     }
     //임베드(원하는 시간만큼 보여주고 메세지 삭제)
     public void Embed(String title, Color color, String message, boolean Delete, int Time){

@@ -171,10 +171,11 @@ public class ListenCommend extends ListenerAdapter {
                 String title = target.getUser().getName() + "님의 누적 경고 횟수";
                 count = warnRepo.getWarn(guildId,userId);
                 comment = "경고 횟수 : "+ count + "\n뮤트 : " + warnRepo.getMute(guildId,userId);
-
                 embedUtil.Embed(title,Color.cyan,comment);
                 return;
+
             case "reset":
+            case "초기화":
                 warnRepo.resetWarn(guildId,userId);
                 return;
         }
@@ -217,18 +218,18 @@ public class ListenCommend extends ListenerAdapter {
                 break;
 
             case "sub":
-                count = warnRepo.getWarn(guildId,userId);
+                count = warnRepo.getWarn(guildId, userId);
 
-                if(count<=0){
-                    messageReceivedEvent.getMessage().reply(target.getAsMention() +"(은)는 경고 수가 0입니다.").queue();
+                if (count <= 0) {
+                    messageReceivedEvent.getMessage().reply(target.getAsMention() + "(은)는 경고 수가 0입니다.").queue();
                 }
-                else{
-                    warnCount = warnRepo.subWarn(guildId,userId);
+                else {
+                    warnCount = warnRepo.subWarn(guildId, userId);
                     count = warnCount.getWarncnt();
                     String title = "경고 횟수 감소";
                     comment = target.getAsMention() + "님의 경고횟수가 1감소했습니다.\n" + "현재 경고 회수 : " + count;
 
-                    embedUtil.Embed(title,Color.cyan,comment);
+                    embedUtil.Embed(title, Color.cyan, comment);
                 }
                 break;
 
