@@ -1,4 +1,0 @@
-spring:
-  data:
-    mongodb:
-      uri: mongodb+srv://<ID>:<PassWord>@APP_NAME.ajlsugx.mongodb.net/<DB_NAME>?retryWrites=true&w=majority&appName=<DB_CLUSTER>
