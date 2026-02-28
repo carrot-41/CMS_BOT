@@ -4,13 +4,12 @@ import BanWord.database.CurseWordRepo;
 import Warn.WarnCount;
 import Warn.WarnRepo;
 import lombok.RequiredArgsConstructor;
-import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.exceptions.HierarchyException;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 
 import java.awt.*;
@@ -18,6 +17,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 @Component
@@ -29,9 +29,11 @@ public class ListenCommend extends ListenerAdapter {
     private static final String PREFIX = ">";
     private String comment = "", command = "";
     private MessageReceivedEvent messageReceivedEvent;
+    EmbedUtil embedUtil;
 
     @Override
-    public void onMessageReceived(MessageReceivedEvent event) {
+    public void onMessageReceived(@NotNull MessageReceivedEvent event) {
+        embedUtil = new EmbedUtil(event);
         String message = event.getMessage().getContentRaw().trim();
         // 접두사로 시작하지 않으면 무시
         if (!message.startsWith(PREFIX)) {
@@ -55,35 +57,42 @@ public class ListenCommend extends ListenerAdapter {
                 readhelp("HelpMd/help.md");
                 break;
 
-            case "curseword":
+            case "bedword":
             case "금지어":
-                handleBanWordCommand(args);
+                BanWordCommand(args);
                 break;
 
-            case "warn":
             case "경고":
-                handleWarnCommand(args,"add");
+                WarnCommand(args,"add");
                 break;
 
             case "경고회수":
-            case "회수":
-                handleWarnCommand(args,"sub");
+                WarnCommand(args,"sub");
                 break;
 
-            case "mute":
             case "뮤트":
-                handleMuteCommand(args,true);
+            case "mute":
+                MuteCommand(args,true);
                 break;
 
-            case "unmute":
             case "언뮤트":
-                handleMuteCommand(args,false);
+            case "unmute":
+                MuteCommand(args,false);
                 break;
+
+            case "클린":
+            case "clean":
+                CleanCommand(args);
+                break;
+
+            default:
+                System.out.println("존재하지 않는 명령어 입니다.");
+                event.getChannel().sendMessage("존재하지 않는 명령어입니다.").queue(msg -> msg.delete().queueAfter(5, TimeUnit.SECONDS));
         }
     }
 
     // 금지어 관련 커맨드 처리
-    private void handleBanWordCommand(String[] args) {
+    private void BanWordCommand(String[] args) {
         //권한 체크
         if (ChackOp()) return;
 
@@ -102,12 +111,7 @@ public class ListenCommend extends ListenerAdapter {
                 return;
             default:
                 if(OnOff.isEmpty()){
-                    EmbedBuilder eb = new EmbedBuilder();
-                    eb.setTitle("금지어 목록");
-                    eb.setColor(Color.cyan);
-                    eb.setDescription(word + "는 없는 명령어 입니다.\n 금지어 관련 도뭉말을 보시려면 '>금지어 help'를 입력해 주세요");
-                    MessageEmbed embed = eb.build();
-                    messageReceivedEvent.getChannel().sendMessageEmbeds(embed).queue();
+                    embedUtil.Embed("알 수 없는 명령어",Color.cyan,word + "는 없는 명령어 입니다.\n 금지어 관련 도뭉말을 보시려면 '>금지어 help'를 입력해 주세요",true);
                 }
         }
 
@@ -142,7 +146,7 @@ public class ListenCommend extends ListenerAdapter {
     }
 
     // 경고 커맨드 처리: >경고 @유저 [사유...]
-    private void handleWarnCommand(String[] args,String Warning) {
+    private void WarnCommand(String[] args,String Warning) {
         if (ChackOp()) return;
 
         if (messageReceivedEvent.getMessage().getMentions().getMembers().isEmpty()) {
@@ -168,7 +172,7 @@ public class ListenCommend extends ListenerAdapter {
                 count = warnRepo.getWarn(guildId,userId);
                 comment = "경고 횟수 : "+ count + "\n뮤트 : " + warnRepo.getMute(guildId,userId);
 
-                Embed(title,Color.cyan,comment);
+                embedUtil.Embed(title,Color.cyan,comment);
                 return;
         }
 
@@ -204,7 +208,7 @@ public class ListenCommend extends ListenerAdapter {
                     }
                 }catch (HierarchyException e){
                     System.out.println("해당 유저는 뮤트할 수 없습니다.");
-                    Embed("",Color.cyan,target.getAsMention()+"(은)는 뮤트할 수 없습니다");
+                    embedUtil.Embed("",Color.cyan,target.getAsMention()+"(은)는 뮤트할 수 없습니다");
                     messageReceivedEvent.getMessage().reply(target.getAsMention()+"(은)는 뮤트할 수 없습니다").queue();
                 }
                 break;
@@ -219,10 +223,9 @@ public class ListenCommend extends ListenerAdapter {
                     warnCount = warnRepo.subWarn(guildId,userId);
                     count = warnCount.getWarncnt();
                     String title = "경고 횟수 감소";
-                    comment = target.getAsMention()+"님의 경고횟수가 1 감소했습니다.\n"+
-                            "현재 경고 회수 : " + count;
+                    comment = target.getAsMention() + "님의 경고횟수가 1감소했습니다.\n" + "현재 경고 회수 : " + count;
 
-                    Embed(title,Color.cyan,comment);
+                    embedUtil.Embed(title,Color.cyan,comment);
                 }
                 break;
 
@@ -232,7 +235,7 @@ public class ListenCommend extends ListenerAdapter {
     }
 
     // 뮤트 (>mute @유저 )
-    private void handleMuteCommand(String[] args,boolean mute) {
+    private void MuteCommand(String[] args,boolean mute) {
         if (ChackOp()) return;
 
         //뮤트
@@ -309,6 +312,8 @@ public class ListenCommend extends ListenerAdapter {
         messageReceivedEvent.getChannel().getIterableHistory()
                 .takeAsync(Cnt+1) // 비동기적으로 메시지 가져오기
                 .thenAccept(messageReceivedEvent.getChannel()::purgeMessages);
+
+        embedUtil.Embed("메시지 삭제",Color.RED,"메세지 "+Cnt+"개 만큼 삭제 했습니다.",true,2);
     }
 
     //help.md를 읽어오기
@@ -322,7 +327,7 @@ public class ListenCommend extends ListenerAdapter {
         }
         try {
             help = new String(is.readAllBytes(), StandardCharsets.UTF_8);
-            Embed("도움말",Color.cyan,help);
+            embedUtil.Embed("도움말",Color.cyan,help);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -339,23 +344,12 @@ public class ListenCommend extends ListenerAdapter {
             String Description = "현재 권한 : `" + currentPerms
                     + "`\n필요한 권한 : `" + "ADMINISTRATOR"
                     + "`\n사용하려는 명령어 : `" + command + "`";
-            Embed("권한 부족",Color.RED,Description);
+            embedUtil.Embed("권한 부족",Color.RED,Description);
         }
         return hasAdmin;
     }
 
     private void BanList(String banlist){
-        Embed("금지어 목록",Color.green,banlist);
-    }
-
-    private void Embed(String title, Color color, String message){
-        EmbedBuilder eb = new EmbedBuilder();
-        eb.setTitle(title);
-        eb.setColor(color);
-        eb.setDescription(message);
-
-        MessageEmbed embed = eb.build();
-        messageReceivedEvent.getMessage().replyEmbeds(embed).queue();
-        eb.clear();
+        embedUtil.Embed("금지어 목록",Color.green,banlist);
     }
 }
