@@ -5,6 +5,8 @@ build/
 !**/src/test/**/build/
 src/main/resources/Token.properties
 src/main/resources/application.yml
+src/main/resources/Token(Sample).properties
+src/main/resources/application(Sample).yml
 .idea
 
 ### Logs ###
