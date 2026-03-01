@@ -56,7 +56,7 @@ src/main/java/
 │   ├── ListenCommend.java # 명령어 리스너
 │   ├── EmbedUtil.java     # 임베드 메시지 유틸
 │   └── Test.java          # 테스트 클래스
-├── BanWord/               # 금지어 필터링
+├── CurseWord/               # 금지어 필터링
 │   ├── MessageFilter.java # 메시지 필터
 │   └── database/          # 금지어 데이터베이스
 │       ├── CurseWord.java
