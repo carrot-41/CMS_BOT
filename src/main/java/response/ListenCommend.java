@@ -129,6 +129,8 @@ public class ListenCommend extends ListenerAdapter {
                     embedUtil.Embed("알 수 없는 명령어",Color.cyan,word + "(은)는 알 수 없습니다.\n" +
                                                                                     "도움말은 >help를 사용하여 확인하실 수 있습니다.",true);
                 }
+                
+                return;
         }
 
         // 금지어 등록/해제/재활성화 처리
