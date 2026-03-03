@@ -331,7 +331,7 @@ public class ListenCommend extends ListenerAdapter {
     }
 
     //help.md를 읽어오기1
-    private void readhelp(String help){
+    private void readhelp(){
         InputStream is = getClass()
                 .getClassLoader()
                 .getResourceAsStream(help);
