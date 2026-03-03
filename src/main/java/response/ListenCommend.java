@@ -334,7 +334,7 @@ public class ListenCommend extends ListenerAdapter {
     private void readhelp(){
         InputStream is = getClass()
                 .getClassLoader()
-                .getResourceAsStream(help);
+                .getResourceAsStream("HelpMd/help.md");
 
         if (is == null) {
             throw new RuntimeException("파일을 찾을 수 없습니다.");
