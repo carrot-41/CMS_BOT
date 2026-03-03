@@ -178,6 +178,12 @@ public class ListenCommend extends ListenerAdapter {
                     color = Color.GREEN;
                 }
                 break;
+
+            default:
+                title = "알 수 없는 명령";
+                comment = OnOff+"(은)는 알 수 없습니다.\n"+
+                        "도움말은 >help를 사용하여 확인하실 수 있습니다.";
+                color = Color.red;
         }
         messageReceivedEvent.getMessage().reply(comment).queue();
     }
