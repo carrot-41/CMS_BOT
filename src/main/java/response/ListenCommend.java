@@ -319,9 +319,9 @@ public class ListenCommend extends ListenerAdapter {
             String userId = target.getId();
             try {
                 target.getGuild().timeoutFor(target, Duration.ofMinutes(time))
-                        .queue(
-                                    warnRepo.setMuted(guildId, userId, true);
+                        .queue(v -> {warnRepo.setMuted(guildId, userId, true);
                                     embedUtil.Embed("뮤트 성공",Color.GREEN,target.getAsMention() + "님을 "+muteTime+"분간 뮤트 했습니다.");
+                                });
             }
             catch (Exception e) {
                 embedUtil.Embed("뮤트중 에러발생",Color.orange,"해당 유저가 현재 봇보다 권한이 높기에 뮤트할 수 없습니다.\n"+"대상 권한 : " + HighestPerm.GetHighestPerm(messageReceivedEvent));
