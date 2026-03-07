@@ -40,44 +40,54 @@ JDA를 기반으로 한 Discord 서버 관리 봇입니다. 금지어 필터링,
 - **Java 17**
 - **Spring Boot 3.2.0**
 - **JDA (Java Discord API) 6.1.2**
-- **MongoDB** (데이터 저장소)S
-- **Gradle** (빌드 도구)
-- **Lombok** (보일러플레이트 코드 감소)
+- **MongoDB**
+- **Gradle**
+- **Lombok**
 
 ## 📁 프로젝트 구조
 
 ```
 src/main/java/
-├── my/bot/                 # 메인 애플리케이션
-│   ├── BotMain.java       # Spring Boot 진입점
-│   ├── BotToken.java      # Discord 토큰 관리
-│   └── GatwayIntents.java # Discord 게이트웨이 인텐트
-├── response/              # 명령어 처리
-│   ├── ListenCommend.java # 명령어 리스너
-│   ├── EmbedUtil.java     # 임베드 메시지 유틸
-│   └── Test.java          # 테스트 클래스
-├── CurseWordDB/               # 금지어 필터링
-│   ├── MessageFilter.java # 메시지 필터
-│   └── database/          # 금지어 데이터베이스
-│       ├── CurseWordDB.java
+├── my/bot/─────────────────────> 메인 애플리케이션
+│   ├── BotMain.java 
+│   ├── BotToken.java
+│   └── GatwayIntents.java 
+├── response/───────────────────> 명령어 처리
+│   ├── ListenCommend.java
+│   ├── Command/────────────────> 명령어 모음
+│   │   ├── Clean
+│   │   ├── CurseWord
+│   │   ├── Help
+│   │   ├── Mute
+│   │   └── Warn
+│   └── Util/────────────────────> 
+│       ├── EmbedUtil.java
+│       └── HighestPermUtil.java
+├── CurseWordDB/────────────────> 금지어 필터링
+│   ├── MessageFilter.java
+│   ├── Util/───────────────────> 메시지 정규화
+│   │   ├── HangulUtils.java
+│   │   └── TextNormalizer.java
+│   └── database/───────────────> 메시지 저장
+│       ├── CurseWordDB.java   
 │       ├── CurseWordEntity.java
 │       └── CurseWordRepo.java
-└── WarnDB/                  # 경고 시스템
-    ├── WarnCount.java     # 경고 카운트
-    ├── WarnEntity.java    # 경고 엔티티
-    └── WarnRepo.java      # 경고 저장소
+└── WarnDB/─────────────────────> 경고 시스템
+    ├── WarnCount.java
+    ├── WarnEntity.java 
+    └── WarnRepo.java 
 ```
 
 ## 🔄 시스템 흐름
 
 ### 1. 봇 시작 및 Discord 연결
 1. Spring Boot 애플리케이션 시작
-2. Discord 토큰 로드 (Token.properties)
+2. Discord 토큰 로드 (BotToken)
 3. JDA 빌더 설정 및 이벤트 리스너 등록
 4. Discord 서버 연결
 
 ### 2. 명령어 처리
-1. 메시지 수신 및 접두사 검증 (`>`)
+1. 메시지 수신 및 접두사(`>`)
 2. 명령어 파싱 및 분기
 3. 관리자 권한 검증
 4. 적절한 핸들러 함수 호출
