@@ -1,4 +1,4 @@
-package Warn;
+package WarnDB;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

@@ -1,4 +1,4 @@
-package CurseWord.database;
+package CurseWordDB.database;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
 

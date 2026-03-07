@@ -1,4 +1,4 @@
-package Warn;
+package WarnDB;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
 

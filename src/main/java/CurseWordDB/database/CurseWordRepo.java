@@ -1,4 +1,4 @@
-package CurseWord.database;
+package CurseWordDB.database;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
