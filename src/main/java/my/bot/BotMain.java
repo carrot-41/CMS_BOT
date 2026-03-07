@@ -30,6 +30,9 @@ public class BotMain {
         final GatwayIntents intents = new GatwayIntents();
         EnumSet<GatewayIntent> intent = intents.getIntents();
 
+        String ANSI_CYAN = "\u001B[36m";
+        String ANSI_RESET = "\u001B[0m";
+
         JDABuilder.createDefault(token).
                 enableIntents(intent).
                 setActivity(Activity.listening("도움말은 >help")).
