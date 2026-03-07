@@ -1,7 +1,7 @@
 package CurseWordDB;
 
-import CurseWordDB.Normalizer.HangulUtils;
-import CurseWordDB.Normalizer.TextNormalizer;
+import CurseWordDB.Util.HangulUtils;
+import CurseWordDB.Util.TextNormalizer;
 import CurseWordDB.database.CurseWord;
 import CurseWordDB.database.CurseWordRepo;
 import lombok.RequiredArgsConstructor;
@@ -9,7 +9,7 @@ import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.springframework.stereotype.Component;
-import response.EmbedUtil;
+import response.Util.EmbedUtil;
 import java.awt.*;
 import java.util.List;
 import java.util.regex.Pattern;

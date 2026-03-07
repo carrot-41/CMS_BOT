@@ -2,8 +2,7 @@ package response.Command;
 
 import CurseWordDB.database.CurseWordRepo;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
-import response.EmbedUtil;
-import response.ListenCommend;
+import response.Util.EmbedUtil;
 
 import java.awt.*;
 

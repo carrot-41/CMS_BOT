@@ -3,8 +3,8 @@ package response.Command;
 import WarnDB.WarnRepo;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
-import response.EmbedUtil;
-import response.HighestPerm;
+import response.Util.EmbedUtil;
+import response.Util.HighestPermUtil;
 
 import java.awt.*;
 import java.time.Duration;
@@ -49,7 +49,7 @@ public class Mute {
                                 });
             }
             catch (Exception e) {
-                embedUtil.Embed("뮤트중 에러발생",Color.orange,"해당 유저가 현재 봇보다 권한이 높기에 뮤트할 수 없습니다.\n"+"대상 권한 : " + HighestPerm.GetHighestPerm(messageReceivedEvent));
+                embedUtil.Embed("뮤트중 에러발생",Color.orange,"해당 유저가 현재 봇보다 권한이 높기에 뮤트할 수 없습니다.\n"+"대상 권한 : " + HighestPermUtil.GetHighestPerm(messageReceivedEvent));
             }
         }
 

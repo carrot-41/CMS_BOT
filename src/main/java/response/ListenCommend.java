@@ -7,6 +7,8 @@ import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
+import response.Util.EmbedUtil;
+import response.Util.HighestPermUtil;
 
 import java.awt.*;
 
@@ -84,7 +86,6 @@ public class ListenCommend extends ListenerAdapter {
                 case "clear":
                 case "클린":
                     CleanCommand(event,args);
-
                     break;
 
                 default:
@@ -99,7 +100,7 @@ public class ListenCommend extends ListenerAdapter {
         * 관리자 권한이 없으면 false 반환*/
         boolean hasAdmin = messageReceivedEvent.getMember() != null && messageReceivedEvent.getMember().hasPermission(Permission.ADMINISTRATOR);
         if (!hasAdmin) {
-            String getHighestPerm = HighestPerm.GetHighestPerm(messageReceivedEvent);
+            String getHighestPerm = HighestPermUtil.GetHighestPerm(messageReceivedEvent);
             String Description = "현재 권한 : `" + getHighestPerm
                     + "`\n필요한 권한 : `" + "ADMINISTRATOR"
                     + "`\n사용하려는 명령어 : `" + command + "`";
