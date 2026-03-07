@@ -54,12 +54,13 @@ public class ListenCommend extends ListenerAdapter {
         messageReceivedEvent = event;
 
         //커맨드 처리
-        switch (command) {
-            case "h":
-            case "help":
-            case "도움말":
-                readhelp();
-                break;
+        if(ChackOp()){
+            switch (command) {
+                case "h":
+                case "help":
+                case "도움말":
+                    readhelp(event);
+                    break;
 
             case "f":
             case"filter":
