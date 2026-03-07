@@ -79,11 +79,11 @@ public class ListenCommend extends ListenerAdapter {
                     WarnCommand(event,args,"sub");
                     break;
 
-            case "m":
-            case "mute":
-            case "뮤트":
-                MuteCommand(args,true);
-                break;
+                case "m":
+                case "mute":
+                case "뮤트":
+                    MuteCommand(event,args,true);
+                    break;
 
             case "um":
             case "언뮤트":
