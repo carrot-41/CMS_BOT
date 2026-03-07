@@ -113,6 +113,7 @@ public class ListenCommend extends ListenerAdapter {
             String Description = "현재 권한 : `" + getHighestPerm
                     + "`\n필요한 권한 : `" + "ADMINISTRATOR"
                     + "`\n사용하려는 명령어 : `" + command + "`";
+
             embedUtil.Embed("권한 부족",Color.RED,Description);
         }
         return hasAdmin;
