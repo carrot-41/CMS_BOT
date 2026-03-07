@@ -17,6 +17,11 @@ import java.util.EnumSet;
 @EnableMongoRepositories(basePackages = {"CurseWordDB.database", "WarnDB"})
 
 public class BotMain {
+    @Getter
+    private static final String PREFIX = ">";
+    private static final BotToken botToken = new BotToken();
+    private static final String token = botToken.getBotToken();
+
     public static void main(String[] args) {
         final BotToken botToken = new BotToken();
         final GatwayIntents intents = new GatwayIntents();
