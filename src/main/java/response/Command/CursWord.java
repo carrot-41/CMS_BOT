@@ -37,8 +37,8 @@ public class CursWord {
 
         // 금지어 등록/해제/재활성화 처리
         String title;
-        String comment = "";
-        Color color = new Color(255,255,255);
+        String comment;
+        Color color;
         switch (OnOff) {
             case "추가":
             case "n":
