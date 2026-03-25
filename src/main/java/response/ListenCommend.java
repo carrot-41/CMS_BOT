@@ -93,6 +93,13 @@ public class ListenCommend extends ListenerAdapter {
                             "도움말은 >help를 사용하여 확인하실 수 있습니다.",true,5);
             }
         }
+        else{
+            switch (command){
+                case "serverinfo":
+                case "서버정보":
+
+            }
+        }
     }
 
     private boolean ChackOp() {
