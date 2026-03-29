@@ -24,7 +24,6 @@ public class MessageFilter extends ListenerAdapter {
 
     // 한글 포함 여부 확인 패턴
     private static final Pattern HANGUL_PATTERN = Pattern.compile("[\\uAC00-\\uD7AF\\u3131-\\u3163]");
-    private final ListenCommend listenCommend;
 
     @Override
     public void onMessageReceived(MessageReceivedEvent event) {
