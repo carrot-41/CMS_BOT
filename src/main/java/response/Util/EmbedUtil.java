@@ -15,17 +15,17 @@ public class EmbedUtil {
     }
 
     //임베드(기본)
-    public void Embed(String title, Color color, String message){
-        Embed(title,color,message,false,0);
+    public void Embed(String title, String message,Color color){
+        Embed(title,message,color,false,0);
     }
 
     //임베드(일정 시간만 보여주고 메세지 삭제)
-    public void Embed(String title, Color color, String message, boolean Delete){
-        Embed(title,color,message, Delete,5);
+    public void Embed(String title, String message, Color color, boolean Delete){
+        Embed(title,message, color, Delete,5);
     }
 
     //임베드(원하는 시간만큼 보여주고 메세지 삭제)
-    public void Embed(String title, Color color, String message, boolean Delete, int Time){
+    public void Embed(String title, String message, Color color, boolean Delete, int Time){
         EmbedBuilder eb = new EmbedBuilder();
 
         eb.setTitle(title);

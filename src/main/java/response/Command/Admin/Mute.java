@@ -35,7 +35,7 @@ public class Mute {
                     time = Integer.parseInt(muteTime);
                 }
             }catch (NumberFormatException e){
-                embedUtil.Embed("뮤트 시간 에러", Color.RED,"뮤트할 시간은 정수로 입력해주세요",true);
+                embedUtil.Embed("뮤트 시간 에러","뮤트할 시간은 정수로 입력해주세요", Color.RED,true);
             }
 
             Member target = messageReceivedEvent.getMessage().getMentions().getMembers().get(0);
@@ -45,11 +45,11 @@ public class Mute {
                 target.getGuild().timeoutFor(target, Duration.ofMinutes(time))
                         .queue(
                                 v -> {warnRepo.setMuted(guildId, userId, true);
-                                    embedUtil.Embed("뮤트 성공",Color.GREEN,target.getAsMention() + "님을 "+muteTime+"분간 뮤트 했습니다.");
+                                    embedUtil.Embed("뮤트 성공",target.getAsMention() + "님을 "+muteTime+"분간 뮤트 했습니다.",Color.GREEN);
                                 });
             }
             catch (Exception e) {
-                embedUtil.Embed("뮤트중 에러발생",Color.orange,"해당 유저가 현재 봇보다 권한이 높기에 뮤트할 수 없습니다.\n"+"대상 권한 : " + HighestPermUtil.GetHighestPerm(messageReceivedEvent));
+                embedUtil.Embed("뮤트중 에러발생","해당 유저가 현재 봇보다 권한이 높기에 뮤트할 수 없습니다.\n"+"대상 권한 : " + HighestPermUtil.GetHighestPerm(messageReceivedEvent),Color.orange);
             }
         }
 
@@ -70,7 +70,7 @@ public class Mute {
                                 warnRepo.setMuted(guildId, userId, false);
                                 messageReceivedEvent.getChannel().sendMessage(target.getAsMention() + "님의 뮤트가 해제되었습니다.").queue();
                             },
-                            e -> embedUtil.Embed("뮤트중 에러발생",Color.BLACK,"에러 코드 : "+e.getMessage())
+                            e -> embedUtil.Embed("뮤트중 에러발생","에러 코드 : "+e.getMessage(),Color.BLACK)
                     );
         }
     }

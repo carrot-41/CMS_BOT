@@ -20,7 +20,7 @@ public class Help {
         }
         try {
             String help = new String(is.readAllBytes(), StandardCharsets.UTF_8);
-            embedUtil.Embed("도움말", Color.cyan,help);
+            embedUtil.Embed("도움말",help, Color.cyan);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

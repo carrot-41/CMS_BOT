@@ -5,10 +5,11 @@ import CurseWordDB.Util.TextNormalizer;
 import CurseWordDB.database.CurseWord;
 import CurseWordDB.database.CurseWordRepo;
 import lombok.RequiredArgsConstructor;
-import net.dv8tion.jda.api.Permission;
+import my.bot.BotMain;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.springframework.stereotype.Component;
+import response.ListenCommend;
 import response.Util.EmbedUtil;
 import java.awt.*;
 import java.util.List;
@@ -23,6 +24,7 @@ public class MessageFilter extends ListenerAdapter {
 
     // 한글 포함 여부 확인 패턴
     private static final Pattern HANGUL_PATTERN = Pattern.compile("[\\uAC00-\\uD7AF\\u3131-\\u3163]");
+    private final ListenCommend listenCommend;
 
     @Override
     public void onMessageReceived(MessageReceivedEvent event) {
@@ -31,10 +33,8 @@ public class MessageFilter extends ListenerAdapter {
         // 멤버 변수 대신 지역 변수 사용
         String rawMessage = event.getMessage().getContentRaw().trim();
 
-        // 관리자 명령어 예외 처리T
-        if (rawMessage.startsWith(">") &&
-                event.getMember() != null &&
-                event.getMember().hasPermission(Permission.ADMINISTRATOR)) return;
+        // 명령어의 시작 '>'으로 시작하면 하거나 봇의 채팅이면 검사 안하기
+        if (rawMessage.startsWith(BotMain.getPREFIX()) || event.getMessage().getAuthor().isBot()) return;
 
         String content = rawMessage.toLowerCase();
         String guildId = event.getGuild().getId();
@@ -42,7 +42,9 @@ public class MessageFilter extends ListenerAdapter {
 
         // 위반 여부 확인
         if (isViolation(content, bannedList)) {
-            executeDelete(event, rawMessage);
+            event.getMessage().delete().queue();
+            EmbedUtil embedUtil = new EmbedUtil(event);
+            embedUtil.Embed("금지어 감지", "금지어가 포함된 메시지 [" + rawMessage + "]가 감지되었습니다.", Color.red);
         }
     }
 
@@ -53,8 +55,8 @@ public class MessageFilter extends ListenerAdapter {
         String normalizedContent = textNormalizer.normalize(content);
 
         for (CurseWord bw : bannedList) {
-            String target = bw.getWord().toLowerCase();
-            String normalizedTarget = textNormalizer.normalize(target);
+            String targetWord = bw.getWord().toLowerCase();
+            String normalizedTarget = textNormalizer.normalize(targetWord);
 
             // 1단계: 일반 텍스트 매칭
             if (normalizedContent.contains(normalizedTarget)) return true;
@@ -67,12 +69,5 @@ public class MessageFilter extends ListenerAdapter {
             }
         }
         return false;
-    }
-
-    //금지어 감지 메세지
-    private void executeDelete(MessageReceivedEvent event, String detectedMessage) {
-        event.getMessage().delete().queue();
-        EmbedUtil embedUtil = new EmbedUtil(event);
-        embedUtil.Embed("금지어 감지", Color.red, "금지어가 포함된 메시지 [" + detectedMessage + "]가 감지되었습니다.");
     }
 }

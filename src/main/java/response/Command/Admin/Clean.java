@@ -29,7 +29,7 @@ public class Clean {
                         .takeAsync(Cnt) //메시지 가져오기
                         .thenAccept(messageReceivedEvent.getChannel()::purgeMessages);
 
-                embedUtil.Embed("메시지 삭제", Color.RED,"메세지 "+Cnt+"개 만큼 삭제 했습니다.",true,2);
+                embedUtil.Embed("메시지 삭제","메세지 "+Cnt+"개 만큼 삭제 했습니다.", Color.RED,true,2);
             }
         }catch (NumberFormatException e){
             System.out.println(e.getMessage()+"\n 문자를 숫자로 변환하려 함");

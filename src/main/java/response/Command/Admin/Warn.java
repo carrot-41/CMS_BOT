@@ -38,7 +38,7 @@ public class Warn {
                 String title = target.getUser().getName() + "님의 누적 경고 횟수";
                 count = warnRepo.getWarn(guildId,userId);
                 comment = "경고 횟수 : "+ count + "\n뮤트 : " + warnRepo.getMute(guildId,userId);
-                embedUtil.Embed(title, Color.cyan,comment);
+                embedUtil.Embed(title,comment, Color.cyan);
                 return;
 
             case "reset":
@@ -60,7 +60,7 @@ public class Warn {
                     color = new Color(251,101,68);
                     comment = target.getAsMention() + "님께 경고 " + count + "회가 누적되었습니다. (사유: " + reason + ")";
                 }
-                embedUtil.Embed("경고 횟수",color,comment);
+                embedUtil.Embed("경고 횟수",comment,color);
 
                 // 타임아웃(뮤트)
                 try {
@@ -80,13 +80,13 @@ public class Warn {
                                 .queue(
                                         v -> {
                                             warnRepo.setMuted(guildId, userId, true);
-                                            embedUtil.Embed("뮤트", finalColor, finalComment);
+                                            embedUtil.Embed("뮤트", finalComment, finalColor);
                                         },
-                                        e -> embedUtil.Embed("뮤트 실패",Color.RED,target.getAsMention()+"님의 권한이 높습니다."+"\n 현재 권한 : "+ currentPerms)
+                                        e -> embedUtil.Embed("뮤트 실패",target.getAsMention()+"님의 권한이 높습니다."+"\n 현재 권한 : "+ currentPerms,Color.RED)
                                 );
                     }
                 }catch (HierarchyException e){
-                    embedUtil.Embed("뮤트 실패",Color.cyan,target.getAsMention()+"(은)는 뮤트할 수 없습니다");
+                    embedUtil.Embed("뮤트 실패",target.getAsMention()+"(은)는 뮤트할 수 없습니다",Color.cyan);
                 }
                 break;
 
@@ -102,7 +102,7 @@ public class Warn {
                     String title = "경고 횟수 감소";
                     comment = target.getAsMention() + "님의 경고횟수가 1감소했습니다.\n" + "현재 경고 회수 : " + count;
 
-                    embedUtil.Embed(title, Color.cyan, comment);
+                    embedUtil.Embed(title, comment, Color.cyan);
                 }
                 break;
 

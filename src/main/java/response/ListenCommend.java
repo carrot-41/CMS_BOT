@@ -7,6 +7,8 @@ import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
+import response.Command.Public.Ping;
+import response.Command.Public.ServerInfo;
 import response.Util.EmbedUtil;
 import response.Util.HighestPermUtil;
 
@@ -34,7 +36,6 @@ public class ListenCommend extends ListenerAdapter {
         if (!message.startsWith(PREFIX)) {
             return;
         }
-
         // ">" 만 입력했을 때 도움말 출력
         if (message.equals(PREFIX)) {
             readhelp(event);
@@ -46,60 +47,66 @@ public class ListenCommend extends ListenerAdapter {
         messageReceivedEvent = event;
 
         //커맨드 처리
-        if(ChackOp()){
-            switch (command) {
-                case "h":
-                case "help":
-                case "도움말":
-                    readhelp(event);
-                    break;
+        switch (command){
+            case "ping":
+                Ping.Print_Ping(event);
+                break;
 
-                case "f":
-                case"filter":
-                case "금지어":
-                    CurseWordCommand(event,args);
-                    break;
+            case "sin":
+            case "serverinfo":
+            case "서버정보":
+                ServerInfo.serverInfo(event);
+                break;
 
-                case "w":
-                case "경고":
-                    WarnCommand(event,args,"add");
-                    break;
+            default:
+                if (ChackOp()){
+                    switch (command) {
+                        case "h":
+                        case "help":
+                        case "도움말":
+                            readhelp(event);
+                            break;
 
-                case "rw":
-                case"경고 취소":
-                case "경고회수":
-                    WarnCommand(event,args,"sub");
-                    break;
+                        case "f":
+                        case"filter":
+                        case "금지어":
+                            CurseWordCommand(event,args);
+                            break;
 
-                case "m":
-                case "mute":
-                case "뮤트":
-                    MuteCommand(event,args,true);
-                    break;
+                        case "w":
+                        case "경고":
+                            WarnCommand(event,args,"add");
+                            break;
 
-                case "um":
-                case "언뮤트":
-                    MuteCommand(event,args,false);
-                    break;
+                        case "rw":
+                        case"경고 취소":
+                        case "경고회수":
+                            WarnCommand(event,args,"sub");
+                            break;
 
-                case "c":
-                case "clear":
-                case "클린":
-                    CleanCommand(event,args);
-                    break;
+                        case "m":
+                        case "mute":
+                        case "뮤트":
+                            MuteCommand(event,args,true);
+                            break;
 
-                default:
-                    embedUtil.Embed("알 수 없는 명령어",Color.RED,command + "(은)는 알 수 없습니다.\n" +
-                            "도움말은 >help를 사용하여 확인하실 수 있습니다.",true,5);
-            }
+                        case "um":
+                        case "언뮤트":
+                            MuteCommand(event,args,false);
+                            break;
+
+                        case "c":
+                        case "clear":
+                        case "클린":
+                            CleanCommand(event,args);
+                            break;
+                    }
+
+                    embedUtil.Embed("알 수 없는 명령어",command + "(은)는 알 수 없습니다.\n" +
+                            "도움말은 >help를 사용하여 확인하실 수 있습니다.", Color.RED,true,5);
+                }
         }
-        else{
-            switch (command){
-                case "serverinfo":
-                case "서버정보":
 
-            }
-        }
     }
 
     private boolean ChackOp() {
@@ -114,7 +121,7 @@ public class ListenCommend extends ListenerAdapter {
                     + "`\n필요한 권한 : `" + "ADMINISTRATOR or MANAGE"
                     + "`\n사용하려는 명령어 : `" + command + "`";
 
-            embedUtil.Embed("권한 부족",Color.RED,Description);
+            embedUtil.Embed("권한 부족", Description, Color.RED);
         }
         return hasAdmin;
     }

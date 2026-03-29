@@ -22,13 +22,13 @@ public class CurseWord {
             case "ls":
             case "list":
                 String list = curseWordRepo.listWords(guildId);
-                embedUtil.Embed("금지어 목록", Color.green,list);
+                embedUtil.Embed("금지어 목록",list, Color.green);
                 break;
 
             default:
                 if(word.isEmpty()&&OnOff.isEmpty()){
-                    embedUtil.Embed("금지어",Color.RED , "잘못된 명령어 입력입니다.\n"+
-                            " 도움말은 >help를 사용하여 확인하실 수 있습니다.",true);
+                    embedUtil.Embed("금지어", "잘못된 명령어 입력입니다.\n"+
+                            " 도움말은 >help를 사용하여 확인하실 수 있습니다.",Color.RED ,true);
                 }
 
                 return;
@@ -91,6 +91,6 @@ public class CurseWord {
                         "도움말은 >help를 사용하여 확인하실 수 있습니다.";
                 color = Color.red;
         }
-        embedUtil.Embed(title, color,comment,true,3);
+        embedUtil.Embed(title,comment, color,true,3);
     }
 }
